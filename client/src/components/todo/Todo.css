@@ -1,0 +1,189 @@
+.todo-wrapper {
+  min-height: 100vh;
+  background: #f0f4f8;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 16px;
+}
+
+.todo-container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.todo-header h1 {
+  font-size: 1.6rem;
+  color: #2d3748;
+  margin: 0;
+}
+
+.todo-count {
+  font-size: 0.85rem;
+  color: #718096;
+  background: #edf2f7;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.todo-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.todo-input:focus {
+  border-color: #667eea;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f7fafc;
+  transition: all 0.2s;
+}
+
+.todo-item.completed {
+  background: #f0fff4;
+  border-color: #9ae6b4;
+  opacity: 0.8;
+}
+
+.todo-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #48bb78;
+  flex-shrink: 0;
+}
+
+.task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+}
+
+.task-text {
+  font-size: 0.95rem;
+  color: #2d3748;
+  flex: 1;
+}
+
+.todo-item.completed .task-text {
+  text-decoration: line-through;
+  color: #a0aec0;
+}
+
+.task-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.edit-row {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1.5px solid #667eea;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+/* Buttons */
+.btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-add {
+  background: #667eea;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.btn-edit {
+  background: #ecc94b;
+  color: #744210;
+}
+
+.btn-delete {
+  background: #fc8181;
+  color: #742a2a;
+}
+
+.btn-save {
+  background: #48bb78;
+  color: #fff;
+}
+
+.btn-cancel {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.loading-text,
+.empty-text {
+  text-align: center;
+  color: #a0aec0;
+  padding: 24px 0;
+  font-size: 0.95rem;
+}
