@@ -4,11 +4,12 @@ import prisma from '../config/prisma';
 import { signToken } from '../utils/jwt';
 import { generateOtp, getOtpExpiry, sendOtpEmail } from '../utils/otp';
 
+const isProd = process.env.NODE_ENV === 'production';
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  secure: isProd,
+  sameSite: (isProd ? 'none' : 'strict') as 'none' | 'strict',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
 // POST /api/auth/register  (only allowed when no admins exist — first/MAIN admin)
