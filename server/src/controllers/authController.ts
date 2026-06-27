@@ -162,7 +162,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 // POST /api/auth/logout
 export const logout = (_req: Request, res: Response): void => {
-  res.clearCookie('token');
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'strict',
+  });
   res.status(200).json({ message: 'Logged out successfully.' });
 };
 
