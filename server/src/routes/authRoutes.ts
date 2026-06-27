@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import { register, verifyOtp, login, logout, me, setPassword, forgotPassword, resetPassword, createAdmin, verifyNewAdmin, listAdmins, toggleAdminAccess, toggleRegisterPermission, deleteAdmin } from '../controllers/authController';
+import { register, verifyOtp, login, logout, me, setPassword, forgotPassword, resetPassword, createAdmin, verifyNewAdmin, listAdmins, toggleAdminAccess, toggleRegisterPermission, deleteAdmin, googleCallback } from '../controllers/authController';
 import { protect } from '../middleware/authMiddleware';
+import passport from 'passport';
 
 const router = Router();
 
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get('/google/callback', googleCallback);
 router.post('/register', register);
 router.post('/verify-otp', verifyOtp);
 router.post('/login', login);

@@ -1,8 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
+import passport from 'passport';
 import prisma from '../config/prisma';
 import { signToken } from '../utils/jwt';
 import { generateOtp, getOtpExpiry, sendOtpEmail } from '../utils/otp';
+
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 const isProd = process.env.NODE_ENV === 'production';
 const COOKIE_OPTIONS = {
@@ -178,6 +181,7 @@ export const me = async (req: Request, res: Response): Promise<void> => {
       id: admin.id,
       name: admin.name,
       email: admin.email,
+      profile_image: admin.profile_image,
       can_register_admin: admin.can_register_admin,
       provider: admin.provider,
       role: admin.role,
@@ -499,4 +503,22 @@ export const deleteAdmin = async (req: Request, res: Response): Promise<void> =>
   await prisma.admin.delete({ where: { id } });
 
   res.status(200).json({ message: `Admin "${target.name}" deleted successfully.` });
+};
+
+// GET /api/auth/google/callback
+export const googleCallback = (req: Request, res: Response, next: NextFunction): void => {
+  passport.authenticate('google', { session: false }, (err: any, admin: any, info: any) => {
+    if (err) {
+      res.redirect(`${FRONTEND_URL}/login?error=server_error`);
+      return;
+    }
+    if (!admin) {
+      const msg = info?.message || 'access_denied';
+      res.redirect(`${FRONTEND_URL}/login?error=${msg}`);
+      return;
+    }
+    const token = signToken(admin.id);
+    res.cookie('token', token, COOKIE_OPTIONS);
+    res.redirect(`${FRONTEND_URL}/admin`);
+  })(req, res, next);
 };

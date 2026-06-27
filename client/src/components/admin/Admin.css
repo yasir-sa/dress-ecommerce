@@ -1,3 +1,98 @@
+.profile-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #c9a84c;
+}
+
+.profile-initials {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a84c, #e8c96d);
+  color: #1a1635;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-card {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: #1e1b4b;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 12px;
+  padding: 1.2rem;
+  min-width: 220px;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.profile-card-avatar img,
+.profile-initials-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #c9a84c;
+  margin: 0 auto 0.8rem;
+  display: block;
+}
+
+.profile-initials-lg {
+  background: linear-gradient(135deg, #c9a84c, #e8c96d);
+  color: #1a1635;
+  font-weight: 700;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-card-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0 0 0.3rem;
+}
+
+.profile-card-email {
+  color: #aaa;
+  font-size: 0.8rem;
+  margin: 0 0 0.8rem;
+  word-break: break-all;
+}
+
+.profile-card-provider {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.8rem;
+  border-radius: 20px;
+}
+
+.profile-card-provider.google {
+  background: rgba(66, 133, 244, 0.2);
+  color: #4285f4;
+}
+
+.profile-card-provider.manual {
+  background: rgba(201, 168, 76, 0.2);
+  color: #c9a84c;
+}
+
 .admin-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);

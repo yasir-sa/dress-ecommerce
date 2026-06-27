@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logoutAdmin, getMe, setPassword, createAdmin, verifyNewAdmin, listAdmins, toggleAdminAccess, toggleRegisterPermission, deleteAdmin } from '../../services/authService';
 import './Admin.css';
@@ -7,6 +7,7 @@ interface AdminInfo {
   id: string;
   name: string;
   email: string;
+  profile_image: string | null;
   provider: string;
   role: string;
   has_password: boolean;
@@ -31,6 +32,8 @@ export default function Admin() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState<AdminInfo | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   // password setup
   const [newPassword, setNewPassword] = useState('');
@@ -65,6 +68,16 @@ export default function Admin() {
       else navigate('/login');
     });
   }, [navigate]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setShowProfile(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -256,10 +269,31 @@ export default function Admin() {
         </div>
         <div className="admin-header-actions">
           {admin && (
-            <span className="admin-name">
-              👤 {admin.name}
-              {admin.role === 'MAIN' && <span className="role-badge-main">MAIN</span>}
-            </span>
+            <div className="profile-trigger" ref={profileRef} onClick={() => setShowProfile(p => !p)}>
+              {admin.profile_image
+                ? <img src={admin.profile_image} className="profile-avatar" alt="profile" referrerPolicy="no-referrer" />
+                : <div className="profile-initials">{admin.name.charAt(0).toUpperCase()}</div>
+              }
+
+              {showProfile && (
+                <div className="profile-card" onClick={e => e.stopPropagation()}>
+                  <div className="profile-card-avatar">
+                    {admin.profile_image
+                      ? <img src={admin.profile_image} alt="profile" referrerPolicy="no-referrer" />
+                      : <div className="profile-initials-lg">{admin.name.charAt(0).toUpperCase()}</div>
+                    }
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    <p className="profile-card-name" style={{ margin: 0 }}>{admin.name}</p>
+                    {admin.role === 'MAIN' && <span className="role-badge-main">MAIN</span>}
+                  </div>
+                  <p className="profile-card-email">{admin.email}</p>
+                  <span className={`profile-card-provider ${admin.provider === 'GOOGLE' ? 'google' : 'manual'}`}>
+                    {admin.provider === 'GOOGLE' ? '🔵 Google' : '🔑 Manual'}
+                  </span>
+                </div>
+              )}
+            </div>
           )}
           <button className="btn-home" onClick={() => navigate('/')}>Home</button>
           <button className="btn-logout" onClick={handleLogout}>Logout</button>
