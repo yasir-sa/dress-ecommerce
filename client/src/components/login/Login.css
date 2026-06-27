@@ -34,6 +34,19 @@
 
 .auth-header { text-align: center; margin-bottom: 2rem; }
 
+.auth-role-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: #1a1635;
+  background: linear-gradient(135deg, #c9a84c, #e8c96d);
+  padding: 0.25rem 0.9rem;
+  border-radius: 20px;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
 .auth-brand {
   font-size: 0.8rem;
   letter-spacing: 0.35em;
@@ -162,3 +175,12 @@
   font-weight: 600;
 }
 .auth-link:hover { opacity: 0.75; }
+
+.auth-error {
+  font-size: 0.82rem;
+  color: #e07070;
+  background: rgba(220, 80, 80, 0.1);
+  border: 1px solid rgba(220, 80, 80, 0.25);
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+}

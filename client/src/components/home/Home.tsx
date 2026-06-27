@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getMe } from '../../services/authService';
 import './Home.css';
 
 export default function Home() {
-  const [isAdminLoggedIn] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getMe().then(res => {
+      if (res.admin) setIsAdminLoggedIn(true);
+    });
+  }, []);
 
   const handleAdminClick = () => {
     if (isAdminLoggedIn) {
@@ -12,10 +19,6 @@ export default function Home() {
     } else {
       navigate('/login');
     }
-  };
-
-  const handleUserLogin = () => {
-    navigate('/login');
   };
 
   return (
@@ -31,11 +34,11 @@ export default function Home() {
           crafted with elegance, comfort, and faith in every thread.
         </p>
         <div className="home-buttons">
-          <button className="btn-user" onClick={handleUserLogin}>
+          <button className="btn-user">
             Shop Now
           </button>
           <button className="btn-admin" onClick={handleAdminClick}>
-            Admin Portal
+            {isAdminLoggedIn ? 'Go to Dashboard' : 'Admin Portal'}
           </button>
         </div>
       </div>

@@ -19,6 +19,11 @@ export const protect = async (req: Request, res: Response, next: NextFunction): 
       return;
     }
 
+    if (!admin.can_access_admin_panel) {
+      res.status(403).json({ message: 'Dashboard access has been revoked. Contact super admin.' });
+      return;
+    }
+
     (req as any).admin = admin;
     next();
   } catch {

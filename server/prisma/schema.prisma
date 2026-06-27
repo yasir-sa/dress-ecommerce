@@ -12,12 +12,18 @@ enum Provider {
   GOOGLE
 }
 
+enum Role {
+  MAIN
+  ADMIN
+}
+
 model Admin {
   id                     String    @id @default(uuid())
   name                   String
   email                  String    @unique
   password               String?
   provider               Provider  @default(MANUAL)
+  role                   Role      @default(ADMIN)
   profile_image          String?
   email_verified         Boolean   @default(false)
   otp                    String?

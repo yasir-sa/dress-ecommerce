@@ -1,8 +1,29 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginAdmin } from '../../services/authService';
 import './Login.css';
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) { setError('Please enter email and password.'); return; }
+    setError('');
+    setLoading(true);
+    const res = await loginAdmin(email, password);
+    setLoading(false);
+    if (res.admin) {
+      navigate('/admin');
+    } else {
+      setError(res.message || 'Login failed.');
+    }
+  };
 
   return (
     <div className="auth-page">
@@ -11,26 +32,41 @@ export default function Login() {
 
         <div className="auth-header">
           <p className="auth-brand">✦ Al-Noor Collection ✦</p>
+          <span className="auth-role-tag">Admin Login</span>
           <h2 className="auth-title">Welcome Back</h2>
-          <p className="auth-subtitle">Sign in to your account</p>
+          <p className="auth-subtitle">Sign in to your admin account</p>
         </div>
 
-        <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+        <form className="auth-form" onSubmit={handleLogin}>
           <div className="field-group">
             <label>Email Address</label>
-            <input type="email" placeholder="you@example.com" />
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
           </div>
 
           <div className="field-group">
             <label>Password</label>
-            <input type="password" placeholder="Enter your password" />
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
           </div>
 
           <div className="forgot-row">
-            <span className="forgot-link">Forgot password?</span>
+            <span className="forgot-link" onClick={() => navigate('/forgot-password')}>Forgot password?</span>
           </div>
 
-          <button type="submit" className="btn-primary">Sign In</button>
+          {error && <p className="auth-error">{error}</p>}
+
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
         </form>
 
         <div className="divider">
