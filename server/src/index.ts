@@ -1,28 +1,24 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import { connectDB } from './config/db';
-import todoRoutes from './routes/todoRoutes';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ message: 'Backend Running' });
 });
 
-app.use('/api/todos', todoRoutes);
+app.use('/api/auth', authRoutes);
 
-const startServer = async () => {
-  await connectDB();
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-};
-
-startServer();
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

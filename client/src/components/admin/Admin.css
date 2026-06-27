@@ -1,0 +1,140 @@
+.admin-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  font-family: 'Arial', sans-serif;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.admin-logo {
+  font-size: 1.1rem;
+  color: #c9a84c;
+  font-family: 'Georgia', serif;
+  letter-spacing: 0.1em;
+}
+
+.admin-tag {
+  font-size: 0.72rem;
+  color: #5a5475;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  letter-spacing: 0.08em;
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.btn-home {
+  padding: 0.5rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 50px;
+  color: #c9a84c;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-home:hover {
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.btn-logout {
+  padding: 0.5rem 1.2rem;
+  background: rgba(220, 80, 80, 0.15);
+  border: 1px solid rgba(220, 80, 80, 0.3);
+  border-radius: 50px;
+  color: #e07070;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: rgba(220, 80, 80, 0.25);
+}
+
+.admin-main {
+  padding: 3rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.admin-welcome { margin-bottom: 2.5rem; }
+
+.admin-title {
+  font-size: 2rem;
+  color: #f5f0e8;
+  font-weight: 400;
+  font-family: 'Georgia', serif;
+  margin-bottom: 0.4rem;
+}
+
+.admin-subtitle {
+  font-size: 0.9rem;
+  color: #8880a0;
+}
+
+.admin-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, #c9a84c, transparent);
+  margin-top: 1rem;
+}
+
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+}
+
+.admin-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 16px;
+  padding: 1.8rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.admin-card:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+  background: rgba(201, 168, 76, 0.05);
+  transform: translateY(-3px);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.admin-card h3 {
+  font-size: 1rem;
+  color: #f5f0e8;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.admin-card p {
+  font-size: 0.82rem;
+  color: #8880a0;
+  line-height: 1.5;
+}
