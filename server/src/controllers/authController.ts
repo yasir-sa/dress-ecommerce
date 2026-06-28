@@ -123,7 +123,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
   // Sync to users table
   await prisma.user.upsert({
     where: { email },
-    update: { name: verified.name, email_verified: true },
+    update: { name: verified.name, email_verified: true, password: verified.password, provider: verified.provider },
     create: {
       name: verified.name,
       email: verified.email,
@@ -230,6 +230,7 @@ export const setPassword = async (req: Request, res: Response): Promise<void> =>
 
   const hashed = await bcrypt.hash(password, 12);
   await prisma.admin.update({ where: { id: admin.id }, data: { password: hashed } });
+  await prisma.user.updateMany({ where: { email: admin.email }, data: { password: hashed } });
 
   res.status(200).json({ message: 'Password set successfully.' });
 };
@@ -306,6 +307,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     where: { email },
     data: { password: hashed, otp: null, otp_expires_at: null },
   });
+  await prisma.user.updateMany({ where: { email }, data: { password: hashed } });
 
   res.status(200).json({ message: 'Password reset successfully. Please login.' });
 };
@@ -466,7 +468,7 @@ export const verifyNewAdmin = async (req: Request, res: Response): Promise<void>
   // Sync to users table
   await prisma.user.upsert({
     where: { email },
-    update: { name: verified.name, email_verified: true },
+    update: { name: verified.name, email_verified: true, password: verified.password, provider: verified.provider },
     create: {
       name: verified.name,
       email: verified.email,
