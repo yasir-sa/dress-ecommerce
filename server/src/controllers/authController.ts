@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import prisma from '../config/prisma';
-import { signToken } from '../utils/jwt';
+import { signToken, signCustomerToken } from '../utils/jwt';
 import { generateOtp, getOtpExpiry, sendOtpEmail } from '../utils/otp';
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -13,6 +13,15 @@ const COOKIE_OPTIONS = {
   secure: isProd,
   sameSite: (isProd ? 'none' : 'strict') as 'none' | 'strict',
   maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
+// Sets customer_token so admins can also access the customer dashboard
+const setCustomerCookie = async (res: Response, email: string) => {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (user) {
+    const customerToken = signCustomerToken(user.id);
+    res.cookie('customer_token', customerToken, COOKIE_OPTIONS);
+  }
 };
 
 // POST /api/auth/register  (only allowed when no admins exist — first/MAIN admin)
@@ -111,8 +120,23 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     data: { email_verified: true, otp: null, otp_expires_at: null, last_login_at: new Date() },
   });
 
+  // Sync to users table
+  await prisma.user.upsert({
+    where: { email },
+    update: { name: verified.name, email_verified: true },
+    create: {
+      name: verified.name,
+      email: verified.email,
+      password: verified.password,
+      provider: verified.provider,
+      profile_image: verified.profile_image,
+      email_verified: true,
+    },
+  });
+
   const token = signToken(verified.id);
   res.cookie('token', token, COOKIE_OPTIONS);
+  await setCustomerCookie(res, verified.email);
 
   res.status(200).json({ message: 'Email verified. Welcome!', admin: { id: verified.id, name: verified.name, email: verified.email } });
 };
@@ -159,17 +183,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
   const token = signToken(admin.id);
   res.cookie('token', token, COOKIE_OPTIONS);
+  await setCustomerCookie(res, admin.email);
 
   res.status(200).json({ message: 'Login successful.', admin: { id: admin.id, name: admin.name, email: admin.email } });
 };
 
 // POST /api/auth/logout
 export const logout = (_req: Request, res: Response): void => {
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'strict',
-  });
+  const cookieOpts = { httpOnly: true, secure: isProd, sameSite: (isProd ? 'none' : 'strict') as 'none' | 'strict' };
+  res.clearCookie('token', cookieOpts);
+  res.clearCookie('customer_token', cookieOpts);
   res.status(200).json({ message: 'Logged out successfully.' });
 };
 
@@ -440,6 +463,20 @@ export const verifyNewAdmin = async (req: Request, res: Response): Promise<void>
     data: { email_verified: true, otp: null, otp_expires_at: null },
   });
 
+  // Sync to users table
+  await prisma.user.upsert({
+    where: { email },
+    update: { name: verified.name, email_verified: true },
+    create: {
+      name: verified.name,
+      email: verified.email,
+      password: verified.password,
+      provider: verified.provider,
+      profile_image: verified.profile_image,
+      email_verified: true,
+    },
+  });
+
   res.status(200).json({
     message: `Admin "${verified.name}" created successfully!`,
     admin: { name: verified.name, email: verified.email },
@@ -507,7 +544,7 @@ export const deleteAdmin = async (req: Request, res: Response): Promise<void> =>
 
 // GET /api/auth/google/callback
 export const googleCallback = (req: Request, res: Response, next: NextFunction): void => {
-  passport.authenticate('google', { session: false }, (err: any, admin: any, info: any) => {
+  passport.authenticate('google', { session: false }, async (err: any, admin: any, info: any) => {
     if (err) {
       res.redirect(`${FRONTEND_URL}/login?error=server_error`);
       return;
@@ -519,6 +556,7 @@ export const googleCallback = (req: Request, res: Response, next: NextFunction):
     }
     const token = signToken(admin.id);
     res.cookie('token', token, COOKIE_OPTIONS);
+    await setCustomerCookie(res, admin.email);
     res.redirect(`${FRONTEND_URL}/admin`);
   })(req, res, next);
 };

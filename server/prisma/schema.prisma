@@ -17,6 +17,24 @@ enum Role {
   ADMIN
 }
 
+model User {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  password       String?
+  provider       Provider  @default(MANUAL)
+  profile_image  String?
+  email_verified Boolean   @default(false)
+  otp            String?
+  otp_expires_at DateTime?
+  is_active      Boolean   @default(true)
+  last_login_at  DateTime?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  @@map("users")
+}
+
 model Admin {
   id                     String    @id @default(uuid())
   name                   String

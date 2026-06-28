@@ -10,3 +10,11 @@ export const signToken = (adminId: string): string => {
 export const verifyToken = (token: string): { adminId: string } => {
   return jwt.verify(token, SECRET) as { adminId: string };
 };
+
+export const signCustomerToken = (userId: string): string => {
+  return jwt.sign({ userId }, SECRET, { expiresIn: EXPIRY });
+};
+
+export const verifyCustomerToken = (token: string): { userId: string } => {
+  return jwt.verify(token, SECRET) as { userId: string };
+};

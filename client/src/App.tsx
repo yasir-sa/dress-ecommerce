@@ -4,7 +4,9 @@ import Login from './components/login/Login';
 import Register from './components/register/Register';
 import Admin from './components/admin/Admin';
 import ForgotPassword from './components/forgot-password/ForgotPassword';
-// import Todo from './components/todo/Todo';
+import CustomerLogin from './components/customer/login/CustomerLogin';
+import CustomerRegister from './components/customer/register/CustomerRegister';
+import CustomerDashboard from './components/customer/dashboard/CustomerDashboard';
 
 function App() {
   return (
@@ -15,7 +17,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* <Route path="/todo" element={<Todo />} /> */}
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route path="/customer/register" element={<CustomerRegister />} />
+        <Route path="/customer/dashboard" element={<CustomerDashboard />} />
       </Routes>
     </BrowserRouter>
   );

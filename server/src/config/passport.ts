@@ -20,13 +20,24 @@ passport.use(
         const existing = await prisma.admin.findUnique({ where: { email } });
 
         if (existing) {
-          // Allow Google login for any existing admin — don't touch password or provider
           const updated = await prisma.admin.update({
             where: { email },
             data: {
               provider: 'GOOGLE',
               profile_image: picture ?? existing.profile_image,
               last_login_at: new Date(),
+            },
+          });
+          // Sync to users table
+          await prisma.user.upsert({
+            where: { email },
+            update: { provider: 'GOOGLE', profile_image: picture ?? existing.profile_image },
+            create: {
+              name: existing.name,
+              email,
+              provider: 'GOOGLE',
+              profile_image: picture,
+              email_verified: true,
             },
           });
           return done(null, updated as any);
@@ -48,6 +59,18 @@ passport.use(
             role: 'MAIN',
             can_register_admin: true,
             can_access_admin_panel: true,
+          },
+        });
+        // Sync to users table
+        await prisma.user.upsert({
+          where: { email },
+          update: { provider: 'GOOGLE', profile_image: picture },
+          create: {
+            name: name ?? '',
+            email,
+            provider: 'GOOGLE',
+            profile_image: picture,
+            email_verified: true,
           },
         });
         return done(null, newAdmin as any);
