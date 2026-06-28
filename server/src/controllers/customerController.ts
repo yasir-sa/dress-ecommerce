@@ -132,6 +132,8 @@ export const loginCustomer = async (req: Request, res: Response): Promise<void> 
     return;
   }
 
+
+
   if (!user.email_verified) {
     res.status(403).json({ message: 'Email not verified. Please check your email for OTP.' });
     return;

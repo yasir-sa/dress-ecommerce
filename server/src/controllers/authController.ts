@@ -157,7 +157,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  if (admin.provider === 'GOOGLE') {
+  if (admin.provider === 'GOOGLE' && !admin.password) {
     res.status(400).json({ message: 'This account uses Google Login. Please sign in with Google.' });
     return;
   }
